@@ -5,7 +5,6 @@
 #include "RTClib.h"
 #include <SPI.h>
 #define p_buzzer 9
-//char daysOfTheWeek[7][12] = {"Domingo", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado"};
 RTC_DS3231 rtc;
 void setup() {
   SPI.begin();          // Init SPI bus
