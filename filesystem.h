@@ -1,7 +1,7 @@
-//#include <SD.h>
+#include <SD.h>
 #include <SPI.h>
 #define chipSelect 4
-//File database;
+File database;
 
 
 bool Inicialize_SD() {

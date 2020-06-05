@@ -44,5 +44,3 @@ void setup() {
   Serial.println("\nDone!");
 }
 void loop() {}
-
-void QUERY_ID(

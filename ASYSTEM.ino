@@ -6,6 +6,7 @@
 #include <SPI.h>
 #define p_buzzer 9
 RTC_DS3231 rtc;
+
 void setup() {
   SPI.begin();          // Init SPI bus
   pinMode(p_buzzer, OUTPUT);
@@ -18,7 +19,6 @@ void setup() {
   }
 
   Serial.begin(9600);//Establecer instancia de puerto serial.
-
 
   if (!Inicializar_TFT()) { //TFT
     BTERROR(0);
@@ -46,6 +46,7 @@ void setup() {
   }
   ADJ_PGR(100);
   tell(F("page 2"));
+  
 }
 
 void ADJ_PGR(int porcentage) { // ACTUALIZAR EL PORCENTAJE E ARRANQUE

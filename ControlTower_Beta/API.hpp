@@ -1,5 +1,4 @@
-String ApiHost = "http://192.168.1.118:8080";
-
+/*
 void processResponse(int httpCode, HTTPClient& http)
 {
   if (httpCode > 0) {
@@ -16,6 +15,8 @@ void processResponse(int httpCode, HTTPClient& http)
   http.end();
 }
 
+*/
+/*
 void GetAll()
 {
   HTTPClient http;
@@ -92,3 +93,4 @@ void DeleteById(int id)
   int httpCode = http.sendRequest("DELETE");
   processResponse(httpCode, http);
 }
+*/

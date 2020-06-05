@@ -20,7 +20,7 @@ String getit() {
 
   }
   message.toUpperCase();
-  if (message == "" || !message.endsWith("FFFFFF")) {
+  if (message == "" || !message.endsWith(F("FFFFFF"))) {
     return message + F("E:RP");
   }
   else {
