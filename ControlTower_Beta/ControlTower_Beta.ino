@@ -8,7 +8,7 @@ char message[100];
 
 void setup() 
 {
-   Serial.begin(115200);
+   Serial.begin(9600);
    Serial.setTimeout(1000);
    ConnectWiFi_STA();
    Serial.println("OK");
@@ -20,8 +20,11 @@ void loop()
     Serial.readBytesUntil('\n',message,100);
     switch (message[0]){
       case 'R':
-      message[0] = '=';
+      message[0] = '=';//add format to querty id?=
       Report();
+      break;
+      case 'H':
+      Serial.println("OK");
       break;
     }
     memset(message, 0, 100);
@@ -33,7 +36,7 @@ delay(100);
 void Report(){
   HTTPClient http;
   http.begin(ApiHost +"/marca?id"+String(message));
-  Serial.println(ApiHost +"/marca?id"+String(message));
+  //Serial.println(ApiHost +"/marca?id"+String(message));
   int httpCode = http.sendRequest("POST");
   if(httpCode == 201){
       String payload = http.getString();

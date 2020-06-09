@@ -35,7 +35,7 @@ void setup() {
     delay(250);
   }
 
-  Serial.begin(115200);//Establecer instancia de puerto serial.
+  Serial.begin(9600);//Establecer instancia de puerto serial.
   if (!Inicializar_TFT()) { //TFT
     delay(250);
     setup();
@@ -77,29 +77,33 @@ void loop() {
   String responce = ReadCard();
   if (responce != "") {
     responce = RegisterTag(responce);
-    Serial.println(responce);
     if (responce.charAt(0) == 'F') {
       //Serial.println("ERROR TAG NOT FOUND");
-      BTERROR(5,false, 2);
+      BTERROR(5, false, 2);
     } else if (responce.charAt(0) == 'S') {
       //Serial.println("Server Error");
-            BTERROR(6,false, 3);
+      BTERROR(6, false, 3);
 
     } else if (responce.charAt(0) == 'C') {
-      CorrectRegister();
+      tell(F("page 3"));
       responce.remove(1, 1);
-      Serial.println("Registed: " + responce);
+      //Serial.println("Registed: " + responce);
+      digitalWrite(p_buzzer, HIGH);
+      delay(500);
+      digitalWrite(p_buzzer, LOW);
+      tell("t1.txt=\"" + responce + "\"");
+      tell(F("vis t1,1"));
+      delay(1000);
+      tell(F("page 2"));
+    } else {
+      BTERROR(7, false, 5);
     }
     responce = "";
   }
   delay(10);
   UpdateTime();
 }
-void CorrectRegister(){
-    digitalWrite(p_buzzer, HIGH);
-    delay(500);
-    digitalWrite(p_buzzer, LOW);
-}
+
 void UpdateTime() {
   DateTime now = rtc.now();
   tell("hr.val=" + String(now.hour(), DEC));
