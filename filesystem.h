@@ -1,6 +1,8 @@
+/***
 #include <SD.h>
 #include <SPI.h>
-#define chipSelect 4
+#include "config.h"
+
 File database;
 
 
@@ -10,3 +12,4 @@ return true;
 bool Inicialize_FS() {
 return true;
 }
+**/

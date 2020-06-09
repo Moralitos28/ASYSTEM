@@ -33,6 +33,7 @@ delay(100);
 void Report(){
   HTTPClient http;
   http.begin(ApiHost +"/marca?id"+String(message));
+  Serial.println(ApiHost +"/marca?id"+String(message));
   int httpCode = http.sendRequest("POST");
   if(httpCode == 201){
       String payload = http.getString();

@@ -1,11 +1,28 @@
+
 #include "screen.h"
-#include "filesystem.h"
+//#include "filesystem.h"
 #include "cardreader.h"
+#include "config.h"
+#include  "control_tower.h"
+
 // Date and time functions using a DS3231 RTC connected via I2C and Wire lib
-#include "RTClib.h"
 #include <SPI.h>
-#define p_buzzer 9
+#include "RTClib.h"
 RTC_DS3231 rtc;
+
+void BTERROR(int error, boolean forever = true, byte rep = 1) {
+  tell(F("page 1"));
+  tell("typ.txt=\"ERR" + String(error) + "\"");
+  do {
+    for (int i = 0; i <= rep; i++) {
+      digitalWrite(p_buzzer, HIGH);
+      delay(100);
+      digitalWrite(p_buzzer, LOW);
+      delay(1000);
+    }
+  } while (forever);
+  tell(F("page 2"));
+}
 
 void setup() {
   SPI.begin();          // Init SPI bus
@@ -18,14 +35,15 @@ void setup() {
     delay(250);
   }
 
-  Serial.begin(9600);//Establecer instancia de puerto serial.
-
+  Serial.begin(115200);//Establecer instancia de puerto serial.
   if (!Inicializar_TFT()) { //TFT
-    BTERROR(0);
+    delay(250);
+    setup();
+    Serial.println("ERROR B0");
   }
 
   ADJ_PGR(10);
-  if (!Inicialize_SD()) { //SD
+  if (!InicializeWiFi()) { //SD
     BTERROR(1);
   }
   ADJ_PGR(25);
@@ -41,34 +59,47 @@ void setup() {
     BTERROR(4);
   }
   ADJ_PGR(75);
-  if (!Inicialize_FS()) { //FILE SYSTEM
+  /*
+    if (!Inicialize_FS()) { //FILE SYSTEM
     BTERROR(5);
-  }
+    }*/
   ADJ_PGR(100);
+  Serial.println("Start Success!");
   tell(F("page 2"));
-  
+
 }
 
 void ADJ_PGR(int porcentage) { // ACTUALIZAR EL PORCENTAJE E ARRANQUE
   tell("PB0.val=" + porcentage);
 }
 
-void BTERROR(int error) {
-  tell(F("page 1"));
-  tell("typ.txt=\"BT" + String(error) + "\"");
-  while (true) {
-    digitalWrite(p_buzzer, HIGH);
-    delay(100);
-    digitalWrite(p_buzzer, LOW);
-    delay(100);
-  }
-}
-
 void loop() {
-  delay(1000);
+  String responce = ReadCard();
+  if (responce != "") {
+    responce = RegisterTag(responce);
+    Serial.println(responce);
+    if (responce.charAt(0) == 'F') {
+      //Serial.println("ERROR TAG NOT FOUND");
+      BTERROR(5,false, 2);
+    } else if (responce.charAt(0) == 'S') {
+      //Serial.println("Server Error");
+            BTERROR(6,false, 3);
+
+    } else if (responce.charAt(0) == 'C') {
+      CorrectRegister();
+      responce.remove(1, 1);
+      Serial.println("Registed: " + responce);
+    }
+    responce = "";
+  }
+  delay(10);
   UpdateTime();
 }
-
+void CorrectRegister(){
+    digitalWrite(p_buzzer, HIGH);
+    delay(500);
+    digitalWrite(p_buzzer, LOW);
+}
 void UpdateTime() {
   DateTime now = rtc.now();
   tell("hr.val=" + String(now.hour(), DEC));

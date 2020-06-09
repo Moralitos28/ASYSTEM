@@ -1,5 +1,7 @@
 #include <SoftwareSerial.h>
-SoftwareSerial Screen(2, 3); // RX, TX TFT SCREEN
+#include "config.h"
+
+SoftwareSerial Screen(tft_rx, tft_tx); // RX, TX TFT SCREEN
 
 void tell(String message) {
   Screen.print(message);
@@ -30,9 +32,9 @@ String getit() {
 
 bool Inicializar_TFT() {
   Screen.begin(9600);// INICIANDO CONEXION CON EL TFT
-  delay(50);
+  delay(150);
   tell(F("rest"));
-  delay(4000);
+  delay(5000);
   getit();
   tell(F("sendme"));
   if (getit().endsWith(F("6600FFFFFF"))) {
