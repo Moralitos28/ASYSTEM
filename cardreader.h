@@ -27,7 +27,7 @@ String ReadCard() {
   if ( ! rfid.PICC_ReadCardSerial()) {
     return "";
   } 
-  String responce;
+  String responce = "";
    rfid.PICC_HaltA();
   rfid.PCD_StopCrypto1();
     for (byte i = 0; i < 4; i++) {

@@ -28,8 +28,9 @@ String ReadUntil() {
       }
     }
   }
-  while(CT.available())
-  CT.read();
+  while(CT.available()){
+      CT.read();
+  }
   return responce;
 }
 
@@ -47,6 +48,15 @@ bool InicializeWiFi() {
 String RegisterTag(String responce) {
   responce = 'R' + responce + '\n';
   CT.print(responce);
+  delay(5);
   responce = ReadUntil();
   return responce;
+}
+
+void SheakHands(){
+  CT.println('H');
+  delay(5);
+  ReadUntil();
+  delay(50);
+  CT.readString();
 }
